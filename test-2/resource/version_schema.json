@@ -68,7 +68,7 @@
                                 "examples": [
                                     "1.0"
                                 ],
-                                "pattern": "^([0-9]+).([0-9]+)$"
+                                "pattern": "^([0-9]+).([0-9]+).([0-9]+)$"
                             },
                             "lastcommitsha": {
                                 "$id": "#/properties/anz-version-test/items/anyOf/0/properties/lastcommitsha",
