@@ -4,7 +4,6 @@ metadata:
   name: anz-deployment
 spec:
   replicas: 2
-  serviceName: anz-service
   selector:
     matchLabels:
       app: golang-test
