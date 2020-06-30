@@ -19,4 +19,5 @@ run:
       VERSION=$(cat ../../version/number)
       apk add jq
       ./write-version.sh $VERSION $COMMITSHA $DESCRIPTION
+      cat resource/version.json
 
