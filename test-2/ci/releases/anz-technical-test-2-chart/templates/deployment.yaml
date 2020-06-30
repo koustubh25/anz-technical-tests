@@ -1,9 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "anz-technical-test-2.fullname" . }}
-  labels:
-    {{- include "anz-technical-test-2.labels" . | nindent 4 }}
+  name: anz-deployment
 spec:
   replicas: 2
   template:
