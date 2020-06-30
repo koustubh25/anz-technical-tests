@@ -17,5 +17,6 @@ run:
       COMMITSHA=$(git rev-parse HEAD)
       DESCRIPTION=pre-interview
       VERSION=$(cat ../../version/number)
+      apk add jq
       ./write-version.sh $VERSION $COMMITSHA $DESCRIPTION
 
