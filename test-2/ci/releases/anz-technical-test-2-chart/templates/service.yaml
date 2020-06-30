@@ -9,5 +9,3 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
-  selector:
-    {{- include "anz-technical-test-2.selectorLabels" . | nindent 4 }}
