@@ -8,6 +8,9 @@ spec:
     matchLabels:
       app: golang-test
   template:
+    metadata:
+      labels:
+        app: golang-test
     spec:
       containers:
         - name: anz-technical-test-2
