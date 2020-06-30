@@ -1,0 +1,82 @@
+# update pipeline:
+# fly -t anz sp -c pipeline-deploy.yml -p anz-test-deploy  
+# resource_types:
+#   - name: github-status
+#     type: docker-image
+#     source:
+#       repository: dpb587/github-status-resource
+#       tag: master
+
+resources:
+  - name: golang-version
+    type: git
+    check_every: 5m
+    source:
+      uri: https://github.com/koustubh25/anz-technical-tests.git
+      branch: master
+      username: ((common.git-username))
+      password: ((common.git-password))
+      disable_ci_skip: false
+  - name: version
+    type: semver
+    source:
+      driver: gcs
+      bucket: anz-golang-version
+      json_key: ((common.service-account))
+      key: version/version.txt
+      initial_version: 0.0.0
+  - name: docker-registry
+    type: docker-image
+    source:
+      repository: us.gcr.io/prismatic-cider-277502/anz-golang-version-test-2
+      username: _json_key
+      password: ((common.service-account))
+  # - name: github-status
+  #   type: github-status
+  #   source:
+  #     uri: https://github.com/koustubh25/anz-technical-tests.git
+  #     branch: master
+  #     username: ((common.git-username))
+  #     password: ((common.git-password))
+  #     context: deploy    
+
+jobs:
+  - name: build-and-deploy
+    serial: true
+    plan:
+      - get: golang-version
+        trigger: true
+      - get: version
+        params: { bump: patch }
+      # - put: github-status
+      #   params:
+      #     commit: golang-version
+      #     state: pending  
+      - put: docker-registry
+        params:
+          additional_tags: golang-version/.git/short_ref
+          build: golang-version/test-2
+          tag_as_latest: true
+          tag_file: version/number
+        get_params: { skip_download: true }
+      - put: version
+        params: { file: version/number }
+    # on_failure:
+    #   do:
+    #     - put: slack
+    #       params:
+    #         alert_type: failed
+    #         text: ((slack.guan))
+    #     - put: github-status
+    #       params:
+    #         commit: provendb-api-gateway
+    #         state: failure
+    # on_success:
+    #   do:
+    #     - put: slack
+    #       params:
+    #         alert_type: success
+    #     - put: github-status
+    #       params:
+    #         commit: provendb-api-gateway
+    #         state: success
