@@ -10,7 +10,7 @@ metadata:
 spec:
   chart:
     git: git@github.com:koustubh25/anz-technical-tests.git
-    path: test2/ci/releases/anz-technical-test2-chart
+    path: test-2/ci/releases/anz-technical-test-2-chart
     ref: master
   values:
     image:
