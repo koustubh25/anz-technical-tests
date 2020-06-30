@@ -31,6 +31,7 @@ resources:
       repository: us.gcr.io/prismatic-cider-277502/anz-golang-version-test-2
       username: _json_key
       password: ((common.service-account))
+
   # - name: github-status
   #   type: github-status
   #   source:
@@ -48,6 +49,8 @@ jobs:
         trigger: true
       - get: version
         params: { bump: patch }
+      - task: update-version-info
+        file: golang-version/ci/write-tags-task.yml    
       # - put: github-status
       #   params:
       #     commit: golang-version
