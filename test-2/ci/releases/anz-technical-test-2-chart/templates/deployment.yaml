@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "anz-technical-test-2.fullname" . }}
+  labels:
+    {{- include "anz-technical-test-2.labels" . | nindent 4 }}
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+        - name: anz-technical-test-2
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /version
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /version
+              port: http

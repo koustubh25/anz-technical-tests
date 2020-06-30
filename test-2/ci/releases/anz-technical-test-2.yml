@@ -1,0 +1,21 @@
+---
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: golang-version-test
+  namespace: anz
+  annotations:
+    flux.weave.works/automated: "true"
+    flux.weave.works/tag.anchor: regexp:^[0-9a-f]{7}$
+spec:
+  chart:
+    git: git@github.com:koustubh25/anz-technical-tests.git
+    path: test2/ci/releases/anz-technical-test2-chart
+    ref: master
+  values:
+    image:
+      repository: "us.gcr.io/prismatic-cider-277502/anz-golang-version-test-2"
+      tag: "b69e792"
+    service:
+      type: LoadBalancer
+      port: 80  
