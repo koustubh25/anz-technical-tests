@@ -16,6 +16,6 @@ run:
       cd golang-version/test-2
       COMMITSHA=$(git rev-parse HEAD)
       DESCRIPTION=pre-interview
-      VERSION=$(cat version/version/number)
+      VERSION=$(cat ../../version/number)
       ./write-version.sh $VERSION $COMMITSHA $DESCRIPTION
 

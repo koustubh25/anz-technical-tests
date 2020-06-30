@@ -50,7 +50,7 @@ jobs:
       - get: version
         params: { bump: patch }
       - task: update-version-info
-        file: golang-version/ci/write-tags-task.yml    
+        file: golang-version/test-2/ci/write-tags-task.yml    
       # - put: github-status
       #   params:
       #     commit: golang-version
