@@ -9,7 +9,8 @@ resource_types:
 resources:
   - name: golang-version
     type: git
-    check_every: 4m
+    check_every: 10m
+    webhook_token: koustubhgaikwad
     source:
       uri: https://github.com/koustubh25/anz-technical-tests.git
       branch: master
