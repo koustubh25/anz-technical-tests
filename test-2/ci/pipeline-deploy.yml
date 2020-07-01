@@ -20,7 +20,7 @@ resources:
     type: semver
     source:
       driver: gcs
-      bucket: anz-golang-version
+      bucket: anz-test-version
       json_key: ((common.service-account))
       key: version/version.txt
       initial_version: 0.0.0
@@ -46,15 +46,15 @@ jobs:
         trigger: true
       - get: version
         params: { bump: patch }
+      - put: github-status
+        params:
+          path: golang-version
+          state: pending  
       - task: update-version-info
         file: golang-version/test-2/ci/tasks/write-tags-task.yml   
       - task: integration-tests
         file: golang-version/test-2/ci/tasks/integration-tests.yml   
         privileged: true
-      - put: github-status
-        params:
-          path: golang-version
-          state: pending  
       - put: docker-registry
         params:
           additional_tags: golang-version/.git/short_ref

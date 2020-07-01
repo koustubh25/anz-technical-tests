@@ -65,15 +65,66 @@ Once the docker container is ready. The CD tool will automatically deploy the do
 Public API implementation - http://130.211.117.181/version
 Github repository (app) - https://github.com/koustubh25/anz-technical-tests/tree/master/test-2
 Github repository (releases) - https://github.com/koustubh25/anz-technical-tests-releases
-
+Concourse pipeline - http://104.198.178.83/teams/main/pipelines/anz-test-deploy
 
 The flow is as shown below:
 
-![logo](test-2/anz.svg)
+![architecture](test-2/images/anz.svg)
 
 
 1. As soon as a developer makes an update to the `anz-technical-tests` repo, a  concourse pipeline is triggered. You can see the status changed on the commits page on github https://github.com/koustubh25/anz-technical-tests/commits/master like this 
 
 ![status](test-2/images/github-status.png)
 
-2. This pipeline 
+2. This pipeline will do the following:
+i. **Run unit tests** - The unit tests are located in `version_test.go` file. It will mainly check that `/resource/version.json` is present and the `json schema` is valid.
+ii. **Run Integration tests** - This task will try and start the docker container for the app and then from another docker container try and hit the `/version` endpoint. If the response is the same as the file contents, then the tests pass. 
+iii. **Create a Docker image** - This will create a docker images based on `Dockerfile` contents
+iv. **Upload docker image** - The build docker image is then uploaded to Google Container Registry
+The concourse pipeline can be accessed here (test/test)
+
+3. There is a Flux k8s operator setup in the GKE cluster. This oeprator is responsible for listening on any updated to this repo on GCR. 
+One other thread in this operator syncs the config from https://github.com/koustubh25/anz-technical-tests-releases into the cluster.
+
+Once there is a new image  in GCR, it will update the releases repo and sync the config in the cluster. That will deploy the new docker image into the cluster.
+
+4. Once it is deployed, a user can the simply hit curl http://130.211.117.181/version and check the version based on output.
+
+**Risks Associated**
+
+1. The setup is not designed for scaling. It would be a problem if there is large amount of traffic.
+2. There is no SSL enabled for any of the hosted services.
+3. Both the images and GKE cluster is all hosted in the US because of the availablity of free credits.
+
+**Versioning**
+
+[Semantic versioning](https://semver.org/) is used, that follows the convention 
+```
+MAJOR_VERSION.MINOR_VERSION.PATCH
+```
+e.g. `1.2.3`
+
+In our code, for the sake of simplicity the concourse pipeline will always increment the patch version 
+```
+e.g. 1.2.3 -> 1.2.4
+```
+
+**Code run through**
+
+I. Check current version
+```
+curl http://130.211.117.181/version
+{
+  "anz-version-test": [
+    {
+      "version": "0.0.1",
+      "lastcommitsha": "0b2178f01296aa1815ff409d4a031cdf9d0a711e",
+      "description": "pre-interview"
+    }
+  ]
+}
+```
+
+II. Make some changes to this repo and push
+III. Wait for the the build. You can confirm the build is complete once there is a green tick in front of your commit on github.
+IV. Try again
