@@ -77,10 +77,11 @@ The flow is as shown below:
 ![status](test-2/images/github-status.png)
 
 2. This pipeline will do the following:
-i. **Run unit tests** - The unit tests are located in `version_test.go` file. It will mainly check that `/resource/version.json` is present and the `json schema` is valid.
-ii. **Run Integration tests** - This task will try and start the docker container for the app and then from another docker container try and hit the `/version` endpoint. If the response is the same as the file contents, then the tests pass. 
-iii. **Create a Docker image** - This will create a docker images based on `Dockerfile` contents
-iv. **Upload docker image** - The build docker image is then uploaded to Google Container Registry
+i. **Update version info** in `version.json` file
+ii. **Run unit tests** - The unit tests are located in `version_test.go` file. It will mainly check that `/resource/version.json` is present and the `json schema` is valid.
+iii. **Run Integration tests** - This task will try and start the docker container for the app and then from another docker container try and hit the `/version` endpoint. If the response is the same as the file contents, then the tests pass. 
+iv. **Create a Docker image** - This will create a docker images based on `Dockerfile` contents
+v. **Upload docker image** - The build docker image is then uploaded to Google Container Registry
 The concourse pipeline can be accessed here (test/test)
 
 3. There is a Flux k8s operator setup in the GKE cluster. This oeprator is responsible for listening on any updated to this repo on GCR. 
