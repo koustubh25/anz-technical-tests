@@ -52,3 +52,28 @@ This is one small change `Addr:         ":8000",` so that the web server is acce
 
 ## II. Test 2
 
+The application as well as the CI pipeline configuration code is placed in the `test-2` repo. The choice of tool for CI is [Concourse](https://concourse-ci.org/) and the tool used for deployment is [Flux](https://github.com/fluxcd/flux) which allows to use [GitOps](https://www.weave.works/technologies/gitops/).
+
+**APP**
+
+The app code is written in the `version.go` file. The version of the app is available through the `/version` endpoint. The app simply displays the contents of the `resource/version.json` file. It is the responsiblity of the CI pipeline to keep track of the appropriate versions and make modifications to the `version.json` file inside the docker container.
+
+Once the docker container is ready. The CD tool will automatically deploy the docker image in Kubernetes cluster.
+
+**Resources**
+
+Public API implementation - http://130.211.117.181/version
+Github repository (app) - https://github.com/koustubh25/anz-technical-tests/tree/master/test-2
+Github repository (releases) - https://github.com/koustubh25/anz-technical-tests-releases
+
+
+The flow is as shown below:
+
+![logo](test-2/anz.svg)
+
+
+1. As soon as a developer makes an update to the `anz-technical-tests` repo, a  concourse pipeline is triggered. You can see the status changed on the commits page on github https://github.com/koustubh25/anz-technical-tests/commits/master like this 
+
+![status](test-2/images/github-status.png)
+
+2. This pipeline 
