@@ -1,11 +1,10 @@
 # update pipeline:
 # fly -t anz sp -c pipeline-deploy.yml -p anz-test-deploy  
-# resource_types:
-#   - name: github-status
-#     type: docker-image
-#     source:
-#       repository: dpb587/github-status-resource
-#       tag: master
+resource_types:
+  - name: github-status
+    type: docker-image
+    source:
+      repository: resource/github-status
 
 resources:
   - name: golang-version
@@ -32,14 +31,12 @@ resources:
       username: _json_key
       password: ((common.service-account))
 
-  # - name: github-status
-  #   type: github-status
-  #   source:
-  #     uri: https://github.com/koustubh25/anz-technical-tests.git
-  #     branch: master
-  #     username: ((common.git-username))
-  #     password: ((common.git-password))
-  #     context: deploy    
+  - name: github-status
+    type: github-status
+    source:
+      repo: koustubh25/anz-technical-tests
+      access_token: ((auth.access_token))
+
 
 jobs:
   - name: build-and-deploy
@@ -51,10 +48,10 @@ jobs:
         params: { bump: patch }
       - task: update-version-info
         file: golang-version/test-2/ci/write-tags-task.yml    
-      # - put: github-status
-      #   params:
-      #     commit: golang-version
-      #     state: pending  
+      - put: github-status
+        params:
+          path: golang-version
+          state: pending  
       - put: docker-registry
         params:
           additional_tags: golang-version/.git/short_ref
@@ -64,22 +61,15 @@ jobs:
         get_params: { skip_download: true }
       - put: version
         params: { file: version/number }
-    # on_failure:
-    #   do:
-    #     - put: slack
-    #       params:
-    #         alert_type: failed
-    #         text: ((slack.guan))
-    #     - put: github-status
-    #       params:
-    #         commit: provendb-api-gateway
-    #         state: failure
-    # on_success:
-    #   do:
-    #     - put: slack
-    #       params:
-    #         alert_type: success
-    #     - put: github-status
-    #       params:
-    #         commit: provendb-api-gateway
-    #         state: success
+    on_failure:
+      do:
+        - put: github-status
+          params:
+            commit: provendb-api-gateway
+            state: failure
+    on_success:
+      do:
+        - put: github-status
+          params:
+            commit: provendb-api-gateway
+            state: success
