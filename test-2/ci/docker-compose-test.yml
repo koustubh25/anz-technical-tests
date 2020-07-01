@@ -1,0 +1,18 @@
+version: '3'
+services:
+  anz-technical-test-2:
+    build: ..
+  test:
+    image: "alpine:latest"
+    depends_on: 
+      - anz-technical-test-2
+    links: 
+      - anz-technical-test-2   
+    command: ["ash", "-c", "chmod a+x test.sh && ./test.sh"]       
+    volumes: 
+      - $PWD/resource/version.json:/version.json
+      - $PWD/ci/unit-test.sh:/test.sh
+
+
+
+ 

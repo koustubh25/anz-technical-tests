@@ -47,7 +47,10 @@ jobs:
       - get: version
         params: { bump: patch }
       - task: update-version-info
-        file: golang-version/test-2/ci/write-tags-task.yml    
+        file: golang-version/test-2/ci/tasks/write-tags-task.yml   
+      - task: integration-tests
+        file: golang-version/test-2/ci/tasks/integration-tests.yml   
+        privileged: true
       - put: github-status
         params:
           path: golang-version
