@@ -9,7 +9,6 @@ resource_types:
 resources:
   - name: golang-version
     type: git
-    check_every: 10m
     webhook_token: ((auth.webhook_token))
     source:
       uri: https://github.com/koustubh25/anz-technical-tests.git
