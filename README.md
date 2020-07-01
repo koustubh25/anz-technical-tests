@@ -109,7 +109,7 @@ In our code, for the sake of simplicity the concourse pipeline will always incre
 e.g. 1.2.3 -> 1.2.4
 ```
 
-**Code run through**
+**Testing the deployed code**
 
 I. Check current version
 ```
@@ -126,5 +126,17 @@ curl http://130.211.117.181/version
 ```
 
 II. Make some changes to this repo and push
-III. Wait for the the build. You can confirm the build is complete once there is a green tick in front of your commit on github.
+III. Wait for the the build to confirm. You can confirm the build is complete once there is a green tick in front of your commit on github. To check the progress of the build, click on the orange/red/green icon next to the commit.
 IV. Try again
+```
+curl http://130.211.117.181/version
+{
+  "anz-version-test": [
+    {
+      "version": "0.0.2",
+      "lastcommitsha": "33066df47801ef10a4fad84f8ea8e3c3b52e9047",
+      "description": "pre-interview"
+    }
+  ]
+}
+```
