@@ -8,10 +8,6 @@ ENV GO111MODULE=on
 
 WORKDIR /app
 
-# ARG VERSION
-# ARG COMMITSHA
-# ARG DESCRIPTION="This is ANZ test"
-
 # Create appuser
 ENV USER=appuser
 ENV UID=10001
@@ -28,9 +24,6 @@ RUN adduser \
 ADD . .   
 
 RUN apk add jq make
-
-# write content to versions file
-# RUN ./write-version.sh $VERSION $COMMITSHA $DESCRIPTION
 
 RUN make all
 
