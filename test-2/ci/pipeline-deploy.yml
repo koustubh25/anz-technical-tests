@@ -9,7 +9,7 @@ resource_types:
 resources:
   - name: golang-version
     type: git
-    check_every: 5m
+    check_every: 4m
     source:
       uri: https://github.com/koustubh25/anz-technical-tests.git
       branch: master
@@ -65,11 +65,11 @@ jobs:
       do:
         - put: github-status
           params:
-            commit: provendb-api-gateway
+            path: golang-version
             state: failure
     on_success:
       do:
         - put: github-status
           params:
-            commit: provendb-api-gateway
+            path: golang-version
             state: success
