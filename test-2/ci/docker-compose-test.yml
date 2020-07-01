@@ -8,7 +8,7 @@ services:
       - anz-technical-test-2
     links: 
       - anz-technical-test-2   
-    command: ["ash", "-c", "chmod a+x test.sh && ./test.sh"]       
+    command: ["ash", "-c", "tail -f /dev/null && chmod a+x test.sh && ./test.sh"]       
     volumes: 
       - $PWD/resource/version.json:/version.json
       - $PWD/ci/unit-test.sh:/test.sh
